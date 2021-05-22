@@ -2,3 +2,4 @@
 db.db
 *.pyc
 /data_sources/keys.py
+/database/database.ini

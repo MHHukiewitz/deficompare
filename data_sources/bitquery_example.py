@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import pandas as pd
+import database.connector
 
 from data_sources.graphcalls import get_average_eth_like_gas, get_average_btc_like_fees
 
@@ -16,3 +17,8 @@ series = [costs_eth, costs_etc, costs_bsc, costs_btc, costs_doge, costs_ltc]
 
 df = pd.concat(series, axis=1)
 print(df)
+
+conn = database.connector.connect()
+cur = conn.cur()
+
+#TODO: Do DB stuff
