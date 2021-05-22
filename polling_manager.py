@@ -1,11 +1,10 @@
 import data_sources as ds
-from constants import SOLANA_TOKEN_CODE, TOKEN_METRICS_SUFFIX, ETHERIUM_TOKEN_CODE, SERUM_EXCHANGE_CODE, \
-    UNISWAP_EXCHANGE_CODE
 
 
 class PollingManager:
     def __init__(self, db):
         self.db = db
+
         self.solana_metrics = ds.SolanaMetricProvider()  # constructor automatically polls data
         self.etherium_metrics = ds.EthereumMetricProvider()
         self.serum_metrics = ds.SerumMetricProvider()
@@ -18,7 +17,7 @@ class PollingManager:
 
     def poll(self):
         solana_data = self.solana_metrics.poll()
-        self.solana_metrics.store_row_in_db(self.db, SOLANA_TOKEN_CODE, solana_data)
+        self.solana_metrics.store_row_in_db(self.db, self.solana_metrics.name, solana_data)
 
         etherium_data = self.etherium_metrics.poll()
         self.etherium_metrics.store_row_in_db(self.db, ETHERIUM_TOKEN_CODE, etherium_data)

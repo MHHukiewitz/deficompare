@@ -1,14 +1,9 @@
 #!/usr/bin/python
 
-# import sqlite3
 import os
 
 import pandas as pd
 
-from constants import DB_NAME, TOKEN_METRICS_SUFFIX, EXCHANGE_METRICS_SUFFIX, UNISWAP_EXCHANGE_CODE, SOLANA_TOKEN_CODE, \
-    ETHERIUM_TOKEN_CODE, SERUM_EXCHANGE_CODE, TOKEN_CODES, DEX_SYMBOLS, DB_TABLE_LIMIT, DB_RESTRICTION_DELETE_COUNT
-from exchange_metrics_service import ExchangeMetricsService
-from token_metrics_service import TokenMetricsService
 import psycopg2
 from psycopg2.extras import execute_values
 
@@ -49,7 +44,6 @@ class PostgresDatabase:
         cursor.close()
         conn.commit()
 
-
     def get_token_df(self, token_code) -> pd.DataFrame:
         """"""
         conn = self.connect()
@@ -59,7 +53,6 @@ class PostgresDatabase:
 
         cursor.close()
         return df
-
 
     def connect(self):
         """ Connect to the PostgreSQL database server """
@@ -117,7 +110,6 @@ class PostgresDatabase:
         if int(res[0]) > DB_TABLE_LIMIT:
             self.restriction_execution(table)
 
-
     def restriction_execution(self, table):
         """Currently using heroku hobby plan has row limit of 10k, so delete some when near limit"""
         conn = self.connect()
@@ -136,7 +128,7 @@ class PostgresDatabase:
         conn.commit()
 
     def sqlite_insert(self, table, row):
-        #First check there is enough space before inserting
+        # First check there is enough space before inserting
         self.restriction_check(table)
 
         conn = self.connect()
@@ -168,10 +160,9 @@ class PostgresDatabase:
 
         exchange_metrics_service = ExchangeMetricsService(self)
         uniswap_df = exchange_metrics_service.get_dummy_data_uniswap()
-        uniswap_df.to_sql(f"{UNISWAP_EXCHANGE_CODE}{EXCHANGE_METRICS_SUFFIX}", conn, if_exists="replace", index_label='id')
+        uniswap_df.to_sql(f"{UNISWAP_EXCHANGE_CODE}{EXCHANGE_METRICS_SUFFIX}", conn, if_exists="replace",
+                          index_label='id')
         serum_df = exchange_metrics_service.get_dummy_data_serum()
         serum_df.to_sql(f"{SERUM_EXCHANGE_CODE}{EXCHANGE_METRICS_SUFFIX}", conn, if_exists="replace", index_label='id')
 
-
         conn.close()
-
